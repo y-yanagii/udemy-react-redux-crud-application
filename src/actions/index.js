@@ -1,4 +1,4 @@
-// actions
+// actionsはtypeを持つオブジェクト
 export const INCREMENT = 'INCREMENT'
 export const DECREMENT = 'DECREMENT'
 
