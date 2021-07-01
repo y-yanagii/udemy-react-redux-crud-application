@@ -1,5 +1,6 @@
 // import React, { Component } from "react";
 import React from "react";
+import PropTypes from "prop-types";
 
 // クラスコンポーネントの書き方
 // class App extends Component {
@@ -27,7 +28,7 @@ const App = () => {
   const profiles = [
     { name: "Taro", age: 10 },
     { name: "Hanako", age: 5 },
-    { name: "NoName" },
+    { name: "NoName", age: 3 },
   ];
 
   return (
@@ -48,8 +49,14 @@ const User = (props) => {
 }
 
 // default propsを指定propsに値がない場合設定する
-User.defaultProps = {
-  age: 1
-};
+// User.defaultProps = {
+//   age: 1
+// };
+
+// propsの型を定義する(型通りじゃないとコンソールでWarningが出る)
+User.propTypes = {
+  name: PropTypes.string,
+  age: PropTypes.number.isRequired, // isRequiredは必須チェック
+}
 
 export default App;
