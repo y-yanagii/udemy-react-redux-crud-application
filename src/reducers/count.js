@@ -5,7 +5,7 @@ import { INCREMENT, DECREMENT } from "../actions";
 const initialState = { value: 0 }
 
 // stateは値を持っていないためこの時点でinitialStateを渡す
-export default (state = initialState, action) => {
+const switchCount = (state = initialState, action) => {
   // actionで定義したINCREMENT, DECREMENTがaction.typeで取得できる
   // action.typeが未定義だったり初回だったりするとundefinedが来るのでその場合はstateをreturnしてあげる
   switch (action.type) {
@@ -16,4 +16,6 @@ export default (state = initialState, action) => {
     default:
       return state
   }
-}
+};
+
+export default switchCount;
