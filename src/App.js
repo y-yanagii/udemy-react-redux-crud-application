@@ -23,20 +23,33 @@ import React from "react";
 
 // 関数コンポーネントの書き方
 const App = () => {
+  // ユーザ情報
+  const profiles = [
+    { name: "Taro", age: 10 },
+    { name: "Hanako", age: 5 },
+    { name: "NoName" },
+  ];
+
   return (
     <div>
-      <Cat />
-      <Cat />
-      <Cat />
-      <Cat />
+      {
+        profiles.map((profile, index) => {
+          // propsにname、ageを渡す
+          return <User name={profile.name} age={profile.age} key={index} />
+        })
+      }
     </div>
   )
 }
 
-const Cat = () => {
-  return <div>Meow!</div>
+// propsを受け取るコンポーネント
+const User = (props) => {
+  return <div>Hi, I am {props.name}, and {props.age} years old! </div>
 }
 
-
+// default propsを指定propsに値がない場合設定する
+User.defaultProps = {
+  age: 1
+};
 
 export default App;
