@@ -1,38 +1,28 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
-const App = () => (<Counter></Counter>)
+import { increment, decrement } from "../actions";
 
-class Counter extends Component {
-  // コンポーネントの初期化時、コンストラクターメソッドが呼び出される
-  constructor(props) {
-    super(props) // 親クラスで初期化処理
-    // stateにcountをセット
-    this.state = { count: 0 }
-  }
-
-  // state.countに+1
-  handlePlusButton = () => {
-    // stateの中身を変更する場合setState(再レンダリングされる(下のrender(){}が呼ばれている))
-    this.setState({ count: this.state.count + 1 });
-  }
-
-  // state.countを-1
-  handleMinusButton= () => {
-    // stateの中身を変更する場合setState(再レンダリングされる(下のrender(){}が呼ばれている))
-    this.setState({ count: this.state.count - 1 });
-  }
-
+class App extends Component {
   render() {
-    console.log("render");
-    // console.log(this.state); // stateの初期値nullだがCounterクラスのコンストラクタで初期化しているため{count: 0}が入る
+    const props = this.props;
+
     return (
       <React.Fragment>
-        <div>count: { this.state.count }</div>
-        <button onClick={ this.handlePlusButton }>+1</button>
-        <button onClick={ this.handleMinusButton }>-1</button>
+        <div>value: { props.value }</div>
+        <button onClick={ props.increment }>+1</button>
+        <button onClick={ props.decrement }>-1</button>
       </React.Fragment> 
     )
   }
 }
 
-export default App;
+// vueでいうvuexだと思われ
+const mapStateToProps = state => ({ value: state.count.value });
+// const mapDispatchToProps = dispatch => ({
+//   increment: () => dispatch(increment()),
+//   decrement: () => dispatch(decrement()),
+// });
+const mapDispatchToProps = ({ increment, decrement }); // dispatchの省略記法
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
