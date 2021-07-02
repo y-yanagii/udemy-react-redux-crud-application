@@ -4,24 +4,32 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 import './index.css';
 import reducer from './reducers';
 import EventsIndex from './components/events_index';
 import EventsNew from './components/events_new';
+import EventsShow from './components/events_show';
 import reportWebVitals from './reportWebVitals';
 
-// ここで作成されるstoreはアプリの中で唯一のもの(全てのstoreはこのstoreに全て集約されている)
 // applyMiddleware(thunk)でactionの中で非同期処理が行える
-const store = createStore(reducer, applyMiddleware(thunk));
+// developmentモード時デバッグ（redux-dev-toolsで）できる
+const enhancer = process.env.NODE_ENV === 'development' ? composeWithDevTools(applyMiddleware(thunk)) : applyMiddleware(thunk);
+
+// ここで作成されるstoreはアプリの中で唯一のもの(全てのstoreはこのstoreに全て集約されている)
+const store = createStore(reducer, enhancer);
 
 ReactDOM.render(
   // Providerを使用しどのコンポーネントからでも参照できるようにする
+  // exactはパスの完全一致
   <Provider store={ store }>
     <BrowserRouter>
       <Switch>
-        <Route exact path="/events/new" component={EventsNew} />
+        <Route path="/events/new" component={EventsNew} />
+        <Route path="/events/:id" component={EventsShow} />
         <Route exact path="/" component={EventsIndex} />
+        <Route exact path="/events" component={EventsIndex} />
       </Switch>
     </BrowserRouter>
   </Provider>
