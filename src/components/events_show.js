@@ -13,6 +13,12 @@ class EventsShow extends Component {
     this.onDeleteClick = this.onDeleteClick.bind(this);
   }
 
+  componentDidMount() {
+    // レンダリングが完了したらイベント情報を取得しに行く
+    const { id } = this.props.match.params;
+    if (id) this.props.getEvent(id);
+  }
+
   // titleとbodyの入力フォーム（inputタグ）を返す
   renderField(field) {
     const { input, label, type, meta: { touched, error } } = field;
@@ -35,14 +41,15 @@ class EventsShow extends Component {
 
   // イベント情報登録処理を呼ぶ(非同期)
   async onSubmit(values) {
-    // await this.props.postEvent(values);
+    await this.props.putEvent(values);
     this.props.history.push('/');
   }
 
   render() {
     // pristineはボタンの活性非活性をバリデーションをみて判断してくれる
     // submittingはsubmitされたらtrueになりその他はfalseになるのでボタンの二重送信を防止させる
-    const { handleSubmit, pristine, submitting } = this.props // redux-formでの話
+    // invalidは入力エラーがあるとfalseになる
+    const { handleSubmit, pristine, submitting, invalid } = this.props // redux-formでの話
     console.log(submitting);
 
     return (
@@ -51,7 +58,7 @@ class EventsShow extends Component {
         <div><Field label="Body" name="body" type="text" component={this.renderField} /></div>
 
         <div>
-          <input type="submit" value="Submit" disabled={pristine || submitting} />
+          <input type="submit" value="Submit" disabled={pristine || submitting || invalid} />
           <Link to="/">Cancel</Link>
           <Link to="/" onClick={this.onDeleteClick}>Delete</Link>
         </div>
@@ -70,9 +77,14 @@ const validate = values => {
   return errors
 }
 
+const mapStateToProps = (state, ownProps) => {
+  const event = state.events[ownProps.match.params.id]
+  return { initialValues: event, state }
+}
 // dispatch(このコンポーネントにdeleteEventをバインド)
-const mapDispatchToProps = ({ deleteEvent }); // dispatchの省略記法
+const mapDispatchToProps = ({ deleteEvent, getEvent, putEvent }); // dispatchの省略記法
 
-export default connect(null, mapDispatchToProps) (
-  reduxForm({ validate, form: 'eventShowForm' })(EventsShow)
+export default connect(mapStateToProps, mapDispatchToProps) (
+  // Redux-formのenableReinitializeオプションtrueにすると上のinitialValuesの値が更新されるたびにformの中が初期化される
+  reduxForm({ validate, form: 'eventShowForm', enableReinitialize: true })(EventsShow)
 )
