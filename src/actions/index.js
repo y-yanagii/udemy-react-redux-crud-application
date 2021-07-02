@@ -4,6 +4,7 @@ import axios from "axios"; // 外部APIにアクセスするため
 export const INCREMENT = 'INCREMENT'
 export const DECREMENT = 'DECREMENT'
 export const READ_EVENTS = 'READ_EVENTS'
+export const CREATE_EVENT = 'CREATE_EVENT'
 
 export const increment = () => ({
   type: 'INCREMENT'
@@ -21,4 +22,11 @@ export const readEvents = () => async dispatch => {
   // axiosでapi通信(axiosは非同期のためPromiseが返ってくる。よって関数自体async awaitを使ってresponseを受け取る)
   const response = await axios.get(`${ROOT_URL}/events${QUERYSTRING}`); // イベントリストが返ってくる
   dispatch({ type: 'READ_EVENTS', response });
+};
+
+// イベント情報を登録(APIサーバよりaxiosでPOST送信)
+export const postEvent = values => async dispatch => {
+  // axiosでapi通信(axiosは非同期のためPromiseが返ってくる。よって関数自体async awaitを使ってresponseを受け取る)
+  const response = await axios.post(`${ROOT_URL}/events${QUERYSTRING}`, values); // イベントリストが返ってくる
+  dispatch({ type: 'CREATE_EVENT', response });
 };
